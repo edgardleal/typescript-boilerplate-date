@@ -21,6 +21,18 @@ export default class InternalDate {
     this.nativeDate = date;
   }
 
+  get year(): number {
+    return this.nativeDate.getFullYear();
+  }
+
+  get month(): number {
+    return this.nativeDate.getMonth() + 1;
+  }
+
+  get day(): number {
+    return this.nativeDate.getDate();
+  }
+
   /**
    * return a copy of native Date instance
    *
