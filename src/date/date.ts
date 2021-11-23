@@ -12,13 +12,43 @@ function twoDigits(value: number): string {
 }
 
 /**
+ * A simple interface with all date parts as differents
+ * fields to be used in formatters functions
+ */
+export interface DateParts {
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+  minutes: string;
+  seconds: string;
+}
+
+function defaultDateFormatter(parts: DateParts): string {
+  const {
+    year,
+    month,
+    day,
+    hour,
+    minutes,
+    seconds,
+  } = parts;
+  return `${year}-${month}-${day} ${hour}:${minutes}:${seconds}`;
+}
+
+export type FormatterFunction = (parts: DateParts) => string;
+
+/**
  * Represents a date with internal functionalities
  */
 export default class InternalDate {
   private nativeDate: Date;
 
-  constructor(date: Date = new Date()) {
+  private formatter: FormatterFunction;
+
+  constructor(date: Date = new Date(), formatter: FormatterFunction = defaultDateFormatter) {
     this.nativeDate = date;
+    this.formatter = formatter;
   }
 
   /**
@@ -31,13 +61,14 @@ export default class InternalDate {
   }
 
   toString(): string {
-    const year = this.nativeDate.getFullYear();
-    const month = twoDigits(this.nativeDate.getMonth());
-    const day = twoDigits(this.nativeDate.getDay());
-
-    const hour = twoDigits(this.nativeDate.getHours());
-    const minutes = twoDigits(this.nativeDate.getMinutes());
-    const seconds = twoDigits(this.nativeDate.getSeconds());
-    return `${year}-${month}-${day} ${hour}:${minutes}:${seconds}`;
+    const parts = {
+      year: `${this.nativeDate.getFullYear()}`,
+      month: twoDigits(this.nativeDate.getMonth()),
+      day: twoDigits(this.nativeDate.getDate()),
+      hour: twoDigits(this.nativeDate.getHours()),
+      minutes: twoDigits(this.nativeDate.getMinutes()),
+      seconds: twoDigits(this.nativeDate.getSeconds()),
+    };
+    return this.formatter(parts);
   }
 }
